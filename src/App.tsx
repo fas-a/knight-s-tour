@@ -1,35 +1,99 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import "./horse.css";
+import ChessBoard from "./components/ChessBoard";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="flex items-start justify-center h-screen">
+        <Card className="w-full mx-auto m-10 shadow-lg bg-white/60 backdrop-blur rounded-xl flex flex-col items-center justify-center">
+          <CardHeader className="w-full">
+            <CardTitle className="text-center text-2xl font-bold">
+              Chess Horse Footsteps
+            </CardTitle>
+            <CardDescription className="text-center text-base text-gray-600">
+                Place your knight and watch it hop around the board! You can only place it once, so choose wisely. Every step counts 1 point!
+            </CardDescription>
+            <CardAction>
+              {/* Tambahkan komponen aksi login di sini */}
+            </CardAction>
+          </CardHeader>
+          <CardContent>
+            <p className="text-center text-lg font-semibold">Leaderboard</p>
+            <ol>
+              <li>1. asde</li>
+              <li>2. mv fkbr</li>
+            </ol>
+            <ChessBoard />
+          </CardContent>
+          <CardFooter className="flex flex-col gap-2 items-center">
+            <p className="text-center text-sm text-gray-500">
+              &copy; 2025 Chess Horse Footsteps. All rights reserved.
+            </p>
+          </CardFooter>
+        </Card>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+
+      <div className="area fixed inset-0 -z-10">
+        <ul className="circles">
+          {Array.from({ length: 10 }).map((_, i) => {
+            const left = `${Math.floor(Math.random() * 90)}%`;
+            const size = Math.floor(Math.random() * 140) + 15; 
+            const delay = `${Math.floor(Math.random() * 16)}s`;
+            const duration = `${Math.floor(Math.random() * 40) + 10}s`;
+
+            return (
+              <li
+                key={i}
+                className="knight"
+                style={{
+                  left,
+                  width: `${size}px`,
+                  height: `${size}px`,
+                  animationDelay: delay,
+                  animationDuration: duration,
+                }}
+              >
+                <svg
+                  fill="#fff"
+                  version="1.1"
+                  id="Capa_1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 31.537 31.537"
+                  style={{ width: "100%", height: "100%" }}
+                >
+                  <g>
+                    <path
+                      d="M24.36,27.178h-0.093v-0.335c0-0.43-0.348-0.778-0.777-0.778h-0.363c-0.046-0.457-0.065-0.912,0.029-1.338
+            c0.42-1.89,0.935-3.764,1.521-5.607c0.965-3.032,1.547-6.064,0.587-9.211c-1.072-3.518-3.198-6.014-6.813-7.097
+            c-0.251-0.075-0.507-0.308-0.65-0.537C17.287,1.448,16.715,0.689,15.789,0c-0.043,0.409-0.091,0.67-0.093,0.932
+            c-0.003,0.388,0.012,0.778,0.046,1.165c0.047,0.537-0.118,0.861-0.714,0.909c-0.333,0.026-0.658,0.151-0.97,0.227
+            c0,1.208,0,1.208-1.095,1.653c-0.36,0.146-0.741,0.256-1.073,0.45c-0.268,0.156-0.501,0.391-0.708,0.628
+            c-0.48,0.55-0.88,1.18-1.41,1.672c-1.06,0.984-2.168,1.918-3.291,2.831c-0.484,0.394-0.852,0.75-0.611,1.443
+            c0.07,0.201-0.026,0.466-0.07,0.698c-0.135,0.714,0.478,1.944,1.137,2.263c1.561,0.756,2.79,0.548,4.026-0.704
+            c0.583-0.59,1.222-0.823,2.047-0.538c1.134,0.392,2.293,0.683,3.648,0.365c-0.267,0.281-0.424,0.452-0.587,0.617
+            c-1.549,1.575-3.045,3.194-4.179,5.105c-0.901,1.519-1.637,3.115-1.607,4.923c0.008,0.473,0.061,0.946,0.127,1.424h-0.155
+            c-0.43,0-0.778,0.349-0.778,0.778v0.335H9.387c-0.486,0-0.881,0.395-0.881,0.881v3.48l16.735-0.003v-3.478
+            C25.241,27.572,24.847,27.178,24.36,27.178z"
+                      fill="#fff"
+                    />
+                  </g>
+                </svg>
+              </li>
+            );
+          })}
+        </ul>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
