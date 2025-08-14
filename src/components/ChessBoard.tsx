@@ -4,9 +4,9 @@ function ChessBoard() {
   const size = 8;
   const [score, setScore] = useState(0);
   const [knightPos, setKnightPos] = useState<{ row: number; col: number } | null>(null);
-  const [wantMove, setWantMove] = useState(false);
   const [steps, setSteps] = useState<{ row: number; col: number }[]>([]);
   const [win, setWin] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
 
   const knightMoves = [
     { row: -2, col: -1 },
@@ -20,17 +20,17 @@ function ChessBoard() {
   ];
 
   function isStepped(row: number, col: number) {
-    return steps.some(step => step.row === row && step.col === col);
+    return steps.some((step) => step.row === row && step.col === col);
   }
 
   function getValidMoves(pos: { row: number; col: number }) {
     return knightMoves
-      .map(move => ({
+      .map((move) => ({
         row: pos.row + move.row,
         col: pos.col + move.col,
       }))
       .filter(
-        move =>
+        (move) =>
           move.row >= 0 &&
           move.row < size &&
           move.col >= 0 &&
@@ -45,85 +45,91 @@ function ChessBoard() {
       setSteps([{ row, col }]);
       setScore(1);
     } else if (
-      wantMove &&
-      getValidMoves(knightPos).some(move => move.row === row && move.col === col)
+      getValidMoves(knightPos).some(
+        (move) => move.row === row && move.col === col
+      )
     ) {
       setKnightPos({ row, col });
-      setSteps(prev => [...prev, { row, col }]);
-      setScore(prev => prev + 1);
-      setWantMove(false);
+      setSteps((prev) => [...prev, { row, col }]);
+      setScore((prev) => prev + 1);
 
       const nextMoves = getValidMoves({ row, col });
       if (nextMoves.length === 0) {
-        setWin(steps.length + 1 == size * size);
+        if (steps.length + 1 === size * size) {
+          setWin(true); // Menang
+        } else {
+          setGameOver(true); // Kalah
+        }
       }
-      console.log(`Current Score: ${score + 1}`);
-      console.log(`Current Steps: ${steps.length + 1}`);
-      console.log(`win condition: ${win}`);
     }
-  }
-
-  function handleKnightClick() {
-    setWantMove(!wantMove);
   }
 
   return (
     <div
-      className="grid grid-cols-8 gap-0 border-4 border-gray-700 rounded-lg overflow-hidden mx-auto my-6"
-      style={{ width: 400, height: 400 }}
+      style={{
+        position: "relative",
+        width: 400,
+        height: 400,
+        margin: "24px auto",
+      }}
     >
-      {Array.from({ length: size * size }).map((_, idx) => {
-        const row = Math.floor(idx / size);
-        const col = idx % size;
-        const isDark = (row + col) % 2 === 1;
-        const isKnight = knightPos && knightPos.row === row && knightPos.col === col;
-        const stepped = isStepped(row, col);
-        const isValidMove =
-          knightPos &&
-          wantMove &&
-          getValidMoves(knightPos).some(move => move.row === row && move.col === col);
+      <div
+        className="grid grid-cols-8 gap-0 border-4 border-gray-700 rounded-lg overflow-hidden mx-auto my-6"
+        style={{ width: 400, height: 400 }}
+      >
+        {Array.from({ length: size * size }).map((_, idx) => {
+          const row = Math.floor(idx / size);
+          const col = idx % size;
+          const isDark = (row + col) % 2 === 1;
+          const isKnight =
+            knightPos && knightPos.row === row && knightPos.col === col;
+          const stepped = isStepped(row, col);
+          const isValidMove =
+            knightPos &&
+            getValidMoves(knightPos).some(
+              (move) => move.row === row && move.col === col
+            );
 
-        return (
-          <div
-            key={idx}
-            onClick={() => handleSquareClick(row, col)}
-            style={{
-              background: isKnight
-                ? "#ffd700"
-                : isValidMove
-                ? "#fff"
-                : stepped
-                ? "#ffb347"
-                : isDark
-                ? "#4e54c8"
-                : "#8f94fb",
-              width: "100%",
-              height: "100%",
-              aspectRatio: "1 / 1",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: knightPos && !isValidMove ? "default" : "pointer",
-              position: "relative",
-              transition: "background 0.2s",
-            }}
-          >
-            {isKnight && (
-              <svg
-                onClick={handleKnightClick}
-                width="32"
-                height="32"
-                viewBox="0 0 31.537 31.537"
-                fill="#fff"
-                xmlns="http://www.w3.org/2000/svg"
-                style={{
-                  zIndex: 2,
-                  cursor: "pointer",
-                }}
-              >
-                <g>
-                  <path
-                    d="M24.36,27.178h-0.093v-0.335c0-0.43-0.348-0.778-0.777-0.778h-0.363c-0.046-0.457-0.065-0.912,0.029-1.338
+          return (
+            <div
+              key={idx}
+              onClick={() => handleSquareClick(row, col)}
+              style={{
+                background: isKnight
+                  ? "#ffd700"
+                  : isValidMove
+                  ? "#fff"
+                  : stepped
+                  ? "#ffb347"
+                  : isDark
+                  ? "#4e54c8"
+                  : "#8f94fb",
+                width: "100%",
+                height: "100%",
+                aspectRatio: "1 / 1",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: knightPos && !isValidMove ? "default" : "pointer",
+                position: "relative",
+                transition: "background 0.2s",
+              }}
+            >
+              {isKnight && (
+                <svg
+                  width="32"
+                  height="32"
+                  viewBox="0 0 31.537 31.537"
+                  fill="#fff"
+                  xmlns="http://www.w3.org/2000/svg"
+                  style={{
+                    zIndex: 2,
+                    cursor: "pointer",
+                  }}
+                >
+                  <g>
+                    <path
+                      d="M24.36,27.178h-0.093v-0.335c0-0.43-0.348-0.778-0.777-0.778h-0.363c-0.046-0.457-0.065-0.912,0.029-1.338
                     c0.42-1.89,0.935-3.764,1.521-5.607c0.965-3.032,1.547-6.064,0.587-9.211c-1.072-3.518-3.198-6.014-6.813-7.097
                     c-0.251-0.075-0.507-0.308-0.65-0.537C17.287,1.448,16.715,0.689,15.789,0c-0.043,0.409-0.091,0.67-0.093,0.932
                     c-0.003,0.388,0.012,0.778,0.046,1.165c0.047,0.537-0.118,0.861-0.714,0.909c-0.333,0.026-0.658,0.151-0.97,0.227
@@ -134,13 +140,45 @@ function ChessBoard() {
                     c-1.549,1.575-3.045,3.194-4.179,5.105c-0.901,1.519-1.637,3.115-1.607,4.923c0.008,0.473,0.061,0.946,0.127,1.424h-0.155
                     c-0.43,0-0.778,0.349-0.778,0.778v0.335H9.387c-0.486,0-0.881,0.395-0.881,0.881v3.48l16.735-0.003v-3.478
                     C25.241,27.572,24.847,27.178,24.36,27.178z"
-                  />
-                </g>
-              </svg>
-            )}
+                    />
+                  </g>
+                </svg>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      {(win || gameOver) && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: 400,
+            height: 400,
+            background: "rgba(255,255,255,0.85)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 10,
+            animation: "winAnim 1s ease",
+          }}
+        >
+          <div style={{ textAlign: "center" }}>
+            <h1
+              style={{
+                fontSize: 40,
+                color: "#4e54c8",
+                fontWeight: "bold",
+                animation: "popAnim 0.7s",
+              }}
+            >
+              {win ? "YOU WIN!" : "GAME OVER"}
+            </h1>
+            <p style={{ fontSize: 24, color: "#333" }}>Score: {score}</p>
           </div>
-        );
-      })}
+        </div>
+      )}
     </div>
   );
 }
