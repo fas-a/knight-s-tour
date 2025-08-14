@@ -2,11 +2,9 @@ import { useState } from "react";
 
 function ChessBoard() {
   const size = 8;
-  const [knightPos, setKnightPos] = useState<{
-    row: number;
-    col: number;
-  } | null>(null);
+  const [knightPos, setKnightPos] = useState<{ row: number; col: number } | null>(null);
   const [wantMove, setWantMove] = useState(false);
+  const [steps, setSteps] = useState<{ row: number; col: number }[]>([]);
   const knightMoves = [
     { row: -2, col: -1 },
     { row: -2, col: 1 },
@@ -18,12 +16,31 @@ function ChessBoard() {
     { row: 2, col: 1 },
   ];
 
-  function handleSquareClick(row: number, col: number) {
-    if (!knightPos) setKnightPos({ row, col });
+  function handleSquareClick(row: number, col: number, stepped: boolean) {
+    if (!knightPos) {
+      setKnightPos({ row, col });
+      setSteps([{ row, col }]);
+    } else if (
+      wantMove &&
+      !stepped &&
+      knightMoves.some(
+        move =>
+          row === knightPos.row + move.row &&
+          col === knightPos.col + move.col
+      )
+    ) {
+      setKnightPos({ row, col });
+      setSteps(prev => [...prev, { row, col }]);
+      setWantMove(false);
+    }
   }
 
   function handleKnightClick() {
     setWantMove(!wantMove);
+  }
+
+  function isStepped(row: number, col: number) {
+    return steps.some(step => step.row === row && step.col === col);
   }
 
   return (
@@ -35,33 +52,41 @@ function ChessBoard() {
         const row = Math.floor(idx / size);
         const col = idx % size;
         const isDark = (row + col) % 2 === 1;
-        const isKnight =
-          knightPos && knightPos.row === row && knightPos.col === col;
+        const isKnight = knightPos && knightPos.row === row && knightPos.col === col;
+        const stepped = isStepped(row, col);
         const isValidMove =
-          isKnight && wantMove && knightMoves.some((move) => {
-            const newRow = row + move.row;
-            const newCol = col + move.col;
-            return (
-              newRow >= 0 &&
-              newRow < size &&
-              newCol >= 0 &&
-              newCol < size
-            );
-          });
+          knightPos &&
+          wantMove &&
+          !stepped &&
+          knightMoves.some(
+            move =>
+              row === knightPos.row + move.row &&
+              col === knightPos.col + move.col
+          );
+
         return (
           <div
             key={idx}
-            onClick={() => handleSquareClick(row, col)}
+            onClick={() => handleSquareClick(row, col, stepped)}
             style={{
-              background: isValidMove ? "#ffffffff" : (isDark ? "#4e54c8" : "#8f94fb"),
+              background: isKnight
+                ? "#ffd700"
+                : isValidMove
+                ? "#fff"
+                : stepped
+                ? "#ffb347"
+                : isDark
+                ? "#4e54c8"
+                : "#8f94fb",
               width: "100%",
               height: "100%",
               aspectRatio: "1 / 1",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              cursor: knightPos ? "default" : "pointer",
+              cursor: knightPos && !isValidMove ? "default" : "pointer",
               position: "relative",
+              transition: "background 0.2s",
             }}
           >
             {isKnight && (
