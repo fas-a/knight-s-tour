@@ -17,26 +17,22 @@ function App() {
         <Card className="w-full mx-auto m-10 shadow-lg bg-white/60 backdrop-blur rounded-xl flex flex-col items-center justify-center">
           <CardHeader className="w-full">
             <CardTitle className="text-center text-2xl font-bold">
-              Chess Horse Footsteps
+              Knight Tour's
             </CardTitle>
             <CardDescription className="text-center text-base text-gray-600">
-                Place your knight and watch it hop around the board! You can only place it once, so choose wisely. Every step counts 1 point!
+               Challenge yourself with the Knight's Tour! Place your knight on the chessboard and move it in classic L-shapes to visit every square without repeating. Watch your score grow with each step, and enjoy fun animations as you play. Can you complete the tour?
             </CardDescription>
             <CardAction>
-              {/* Tambahkan komponen aksi login di sini */}
+
             </CardAction>
           </CardHeader>
           <CardContent>
-            <p className="text-center text-lg font-semibold">Leaderboard</p>
-            <ol>
-              <li>1. asde</li>
-              <li>2. mv fkbr</li>
-            </ol>
+
             <ChessBoard />
           </CardContent>
           <CardFooter className="flex flex-col gap-2 items-center">
             <p className="text-center text-sm text-gray-500">
-              &copy; 2025 Chess Horse Footsteps. All rights reserved.
+              &copy; 2025 fas-a. All rights reserved.
             </p>
           </CardFooter>
         </Card>
