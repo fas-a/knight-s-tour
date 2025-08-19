@@ -35,6 +35,6 @@ jobs:
 
       # Step 5: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
-        run: npx gh-pages -d dist -u "github-actions[bot]<github-actions[bot]@users.noreply.github.com>"
+        run: npx gh-pages -d dist -u "github-actions[bot]<github-actions[bot]@users.noreply.github.com>" --repo "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
